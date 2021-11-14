@@ -21,6 +21,6 @@ function* watchTerminalRM() {
 }
 
 export default function* terminalSaga() {
-    yield all([fork(watchTerminalMkdir)]);
+    yield all([fork(watchTerminalMkdir),fork(watchTerminalRM)]);
   }
   

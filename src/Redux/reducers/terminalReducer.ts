@@ -49,6 +49,7 @@ const reducer = (state:TERMINAL_REDUCER_INTERFACE = initialState,action : any)  
             if(newState.graph[currentNode].includes(delNode)) {
                 const filterEdges = newState.graph[currentNode].filter(node => delNode != node);
                 newState.graph[currentNode] = filterEdges;
+                newState.edges.delete(delNode);
                 newState.leftNodes.push(delNode);
             }
             else {
