@@ -1,0 +1,1 @@
+export const commands = ["help",'ls','clear','echo','cd','mkdir','rm','pwd','reset','exit'];

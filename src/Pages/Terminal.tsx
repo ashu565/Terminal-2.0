@@ -1,29 +1,46 @@
-import React,{useRef} from 'react';
+import React,{useRef,useState} from 'react';
 import ActivityWrapper from '../Components/layouts/ActivityWrapper';
 import { useSelector } from 'react-redux';
-
+import {commands} from '../helpers/commands';
+interface patt {
+    path : string
+}
 const Terminal : React.FC = () => {
-    const ans = useSelector(state => state);
-    console.log(ans)
-    interface patt {
-        path : string
+    const [terminalInput,setTerminalInput] = useState<string>("");
+    const [terminalError,setTerminalError] = useState<string>("");
+    const inputRef = useRef<HTMLInputElement>(null);
+
+    const HandlePressedKey = (e:any) => {
+        if(e.key === "Enter") {
+            const arr = terminalInput.split(' ');
+            if(arr.length) {
+                arr.shift();
+                const newInput = arr.join(' ');
+                if(!commands.includes(arr[0])) {
+                    setTerminalError(newInput);
+                } else {
+                    if(!newInput) {
+                        setTerminalError("Please Specify the Folder");
+                    }   
+                }
+            } else {
+
+            }
+        }
     }
-    const inputData = useRef<HTMLInputElement>(null);
-    const HandleInputFocus = () => {
-        inputData.current?.focus();
-    }
-    const TerminalBody = (props : patt) => {
+
+    const TerminalBody = ({path} : patt) => {
         return (
             <div>
                 <span style={{color : "#7ce335"}} className='text-lg' >ashutoshsingh@web-os: </span>
                 <span className='text-blue-400 font-semibold' >/desktop/$ </span>
-                <input ref={inputData} className='text-lg outline-none border-none bg-transparent' />
+                <input onChange={e => setTerminalInput(e.target.value.trim())} onKeyPress={HandlePressedKey} ref={inputRef} className='text-lg outline-none border-none bg-transparent' />
             </div>
         )
     }
 
     return (
-        <div onClick={HandleInputFocus} style={{height : '35rem',backgroundColor: "#300a24"}} className='w-2/4 bg-gray-800 shadow-lg rounded-md text-white absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 overflow-scroll scrollbar-hide cursor-text' > 
+        <div onClick={() => inputRef.current?.focus()} style={{height : '35rem',backgroundColor: "#300a24"}} className='w-2/4 bg-gray-800 shadow-lg rounded-md text-white absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 overflow-scroll scrollbar-hide cursor-text' > 
             <header>
                 <ActivityWrapper title="Terminal" iconSrc="/images/terminal.svg" />
             </header>
