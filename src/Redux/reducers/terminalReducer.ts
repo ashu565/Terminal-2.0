@@ -2,9 +2,9 @@ import {  TERMINAL_MKDIR_RESPONSE, TERMINAL_REDUCER_INTERFACE, TERMINAL_RM_RESPO
 
 
 const initialState : TERMINAL_REDUCER_INTERFACE = {
-    node : 1,
+    node : 0,
     edges : new Map(),
-    graph : [[],[]],
+    graph : [[]],
     leftNodes : [],
 };
 
@@ -17,12 +17,16 @@ const reducer = (state:TERMINAL_REDUCER_INTERFACE = initialState,action : any)  
             const {currentNode,newName} = action.payload;
             // I will tell the node from where currently I am
             // I will tell the new node name which you will add to the edges map
-            const target = newState.graph[currentNode].filter(node => {
+            const target = newState.graph[currentNode].map(node => {
                 if(newState.edges.has(node)) {
-                    return node;
+                    return newState.edges.get(node);
                 }
+                throw new Error("Bug from Mkdir");
             });
-            if(target.length == 0) {
+            if(target.includes(newName)) {
+                console.log('A subdirectory or file Natours already exists.');
+            }
+            else {
                 if(newState.leftNodes.length) {
                     const leftNodeSize = newState.leftNodes.length;
                     const newNode = newState.leftNodes[leftNodeSize-1];
@@ -38,11 +42,8 @@ const reducer = (state:TERMINAL_REDUCER_INTERFACE = initialState,action : any)  
                     newState.edges.set(newNode,newName);
                 }
             }
-            else {
-                console.log('A subdirectory or file Natours already exists.');
-            }
             return newState;
-        }
+            }
         case TERMINAL_RM_RESPONSE : {
             const data : {delNode : number,currentNode : number} = action.payload;
             const {delNode,currentNode} = data;
