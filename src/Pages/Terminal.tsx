@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import ActivityWrapper from '../Components/layouts/ActivityWrapper';
 import { useSelector, useDispatch } from 'react-redux';
 import { commands } from '../helpers/commands';
@@ -6,6 +6,8 @@ import { terminal_mkdir_request } from '../Redux/actionCreators/terminalActionCr
 import { TERMINAL_REDUCER_INTERFACE } from '../Redux/actionTypes/terminalActionTypes';
 interface patt {
   path: string;
+  index: number;
+  type: string;
 }
 interface pattx {
   printData: Array<string>;
@@ -21,25 +23,49 @@ const Terminal: React.FC = () => {
   const [messages, setMessages] = useState<Array<Message>>([
     { type: 'info', message: '/$' },
   ]);
-
+  const [update, setUpdate] = useState(false);
   const state: TERMINAL_REDUCER_INTERFACE = useSelector(
     (state: any) => state.terminal
   );
   console.log(state);
   console.log(nodeStack);
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    inputRef.current?.focus();
+  }, [messages]);
+
+  const updateData = (data: string, nodeStack: Array<number>) => {
+    const arr = nodeStack.map((node, index) => {
+      if (index !== 0) {
+        return state.edges.get(node);
+      }
+    });
+    let message = arr.join('/');
+    if (data) {
+      message += '/' + data + '/$';
+    } else {
+      message += '/$';
+    }
+    setMessages([...messages, { type: 'info', message }]);
+  };
+
   const HandleCommands = (command: string, data: string) => {
     command.toLocaleLowerCase();
     switch (command) {
       case 'mkdir': {
         const currentNode = nodeStack[nodeStack.length - 1];
         dispatch(terminal_mkdir_request({ currentNode, newName: data }));
+        const lastMessage = messages[messages.length - 1];
+        setMessages([...messages, lastMessage]);
         break;
       }
       case 'cd': {
         if (data === '..') {
           if (nodeStack.length == 1) {
-            console.log('Cannot go under root directory');
+            const message = 'Cannot go under root directory';
+            const lastMessage = messages[messages.length - 1];
+            setMessages([...messages, { type: 'error', message }, lastMessage]);
             return;
           }
           const cloneStack: number[] = [...nodeStack];
@@ -47,6 +73,7 @@ const Terminal: React.FC = () => {
           if (cloneStack.length == 0) {
             throw new Error('error thrown from cloneStack');
           }
+          updateData('', cloneStack);
           setNodeStack(cloneStack);
         } else {
           const currentNode = nodeStack[nodeStack.length - 1];
@@ -57,8 +84,11 @@ const Terminal: React.FC = () => {
             }
           });
           if (newNode == -1) {
-            console.log("Folder does'nt exists");
+            const message = 'The system cannot find the path specified.';
+            const lastMessage = messages[messages.length - 1];
+            setMessages([...messages, { type: 'error', message }, lastMessage]);
           } else {
+            updateData(data, nodeStack);
             setNodeStack([...nodeStack, newNode]);
           }
         }
@@ -82,33 +112,45 @@ const Terminal: React.FC = () => {
     if (e.key === 'Enter') {
       const terminalInput = e.target.value.trim();
       const arr = terminalInput.split(' ');
-      if (arr.length) {
-        if (!commands.includes(arr[0])) {
-          console.error(arr[0] + ' is not any command');
-          return;
+      if (!commands.includes(arr[0])) {
+        const message = `"${arr[0]}" is not any command.`;
+        const lastMessage = messages[messages.length - 1];
+        if (arr[0]) {
+          setMessages([...messages, { type: 'error', message }, lastMessage]);
+        } else {
+          setMessages([...messages, lastMessage]);
         }
-        const command = arr[0];
-        arr.shift();
-        const newBody = arr.join(' ');
-        HandleCommands(command, newBody);
-      } else {
+        return;
       }
+      const command = arr[0];
+      arr.shift();
+      const newBody = arr.join(' ');
+      HandleCommands(command, newBody);
     }
   };
 
-  const TerminalBody = ({ path }: patt) => {
+  const TerminalBody = ({ path, type }: Partial<patt>) => {
+    console.log(type);
     return (
       <div>
         <span style={{ color: '#7ce335' }} className='text-lg'>
-          ashutoshsingh@web-os:{' '}
+          {type !== 'error' ? 'ashutoshsingh@web-os: ' : ''}
         </span>
-        <span className='text-blue-400 font-semibold'>{path}</span>
-        <input
-          type='text'
-          onKeyPress={HandlePressedKey}
-          ref={inputRef}
-          className='text-lg outline-none border-none bg-transparent'
-        />
+        <span
+          className={`${
+            type == 'error' ? 'text-red-500' : 'text-blue-400'
+          } font-semibold`}
+        >
+          {path}{' '}
+        </span>
+        {type != 'error' && (
+          <input
+            type='text'
+            onKeyPress={HandlePressedKey}
+            ref={inputRef}
+            className='text-lg outline-none border-none bg-transparent'
+          />
+        )}
       </div>
     );
   };
@@ -124,8 +166,8 @@ const Terminal: React.FC = () => {
       <div className='mt-2 ml-1'>
         <h4 className='text-blue-400'>Welcome to Web OS</h4>
         <h4 className=''>Type "help" for all the commands</h4>
-        {messages.map((message: Message) => {
-          return <TerminalBody path={message.message} />;
+        {messages.map((message: Message, index: number) => {
+          return <TerminalBody type={message.type} path={message.message} />;
         })}
       </div>
     </div>
