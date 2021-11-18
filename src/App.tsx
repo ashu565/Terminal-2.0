@@ -1,23 +1,30 @@
-import React, { FC,useState,useEffect } from "react";
+import React, { FC, useState, useEffect } from 'react';
 import Terminal from './Pages/Terminal';
-import {useDispatch } from "react-redux";
-import { terminal_mkdir_request } from "./Redux/actionCreators/terminalActionCreators";
-import { BrowserRouter,Routes,Route } from "react-router-dom";
+import { useDispatch } from 'react-redux';
+import { terminal_mkdir_request } from './Redux/actionCreators/terminalActionCreators';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import axios from 'axios';
 
-const App: FC = props => {
+const App: FC = (props) => {
   const dispatch = useDispatch();
   useEffect(() => {
     const currentNode = 0;
-    const newName = 'Desktop';
-    dispatch(terminal_mkdir_request({currentNode,newName}));
-    dispatch(terminal_mkdir_request({currentNode,newName : "ashutosh"}));
-    dispatch(terminal_mkdir_request({currentNode,newName : "public"}));
-  },[])
-  
+    const newName = 'desktop';
+    dispatch(terminal_mkdir_request({ currentNode, newName }));
+    dispatch(terminal_mkdir_request({ currentNode, newName: 'ashutosh' }));
+    dispatch(terminal_mkdir_request({ currentNode, newName: 'public' }));
+    const init = async () => {
+      await axios.get(
+        'http://localhost:4000/api/v2/quiz/send-quiz-score/3252345'
+      );
+    };
+    init();
+  }, []);
+
   return (
     <BrowserRouter>
       <Routes>
-        <Route path='/' element= {<Terminal />}></Route>
+        <Route path='/' element={<Terminal />}></Route>
       </Routes>
     </BrowserRouter>
   );
