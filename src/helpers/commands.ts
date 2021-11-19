@@ -1,4 +1,3 @@
-import { type } from "os";
 
 export const commands = ["help",'ls','clear','echo','cd','mkdir','rmdir','pwd','reset','exit'];
 

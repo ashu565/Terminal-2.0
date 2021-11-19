@@ -100,5 +100,4 @@ class Trie {
         return ans;
     }
 }
-
 export default Trie;

@@ -1,6 +1,5 @@
 import {  TERMINAL_MKDIR_RESPONSE, TERMINAL_REDUCER_INTERFACE, TERMINAL_RM_RESPONSE } from "../actionTypes/terminalActionTypes";
 
-
 const initialState : TERMINAL_REDUCER_INTERFACE = {
     node : 0,
     edges : new Map(),

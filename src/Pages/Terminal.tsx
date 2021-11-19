@@ -8,33 +8,22 @@ import {
 } from '../Redux/actionCreators/terminalActionCreators';
 import { TERMINAL_REDUCER_INTERFACE } from '../Redux/actionTypes/terminalActionTypes';
 
-import ShowHelp from '../Components/ShowHelp';
-interface patt {
-  path: string;
-  index: number;
-  type: string;
-}
-interface pattx {
-  printData: Array<string>;
-}
+import RenderMessages from '../Components/Terminal/RenderMessages';
+
 interface Message {
   type: string;
   message: string;
 }
 const Terminal: React.FC = () => {
   const inputRef = useRef<HTMLSpanElement | null>(null);
-  const spanRef = useRef<HTMLSpanElement | null>(null);
   const [nodeStack, setNodeStack] = useState<Array<number>>([0]);
 
   const [messages, setMessages] = useState<Array<Message>>([
     { type: 'info', message: '/$' },
   ]);
-  const [update, setUpdate] = useState(false);
   const state: TERMINAL_REDUCER_INTERFACE = useSelector(
     (state: any) => state.terminal
   );
-  console.log(state);
-  console.log(nodeStack);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -202,75 +191,6 @@ const Terminal: React.FC = () => {
     }
   };
 
-  const TerminalBody = ({ path, type, index }: Partial<patt>) => {
-    console.log(type);
-    const len = messages.length - 1;
-    const dont: Array<string> = ['error', 'list', 'help', 'pwd'];
-    let show = true;
-    {
-      /* @ts-ignore */
-      if (dont.includes(type)) {
-        show = false;
-      }
-    }
-    return (
-      <div>
-        <span style={{ color: '#7ce335' }} className='text-lg'>
-          {!show ? '' : 'ashutoshsingh@web-os: '}
-        </span>
-
-        {type === 'help' && <ShowHelp />}
-
-        {type === 'list' && (
-          <span className='text-blue-400 flex flex-wrap items-center text-lg w-1/3'>
-            {path?.split(' ').map((data) => {
-              return <span className='mr-6'>{data}</span>;
-            })}
-          </span>
-        )}
-
-        {type === 'pwd' && <span>{path} </span>}
-        {(type === 'error' || type === 'info') && (
-          <span
-            className={`${
-              type == 'error' ? 'text-red-500' : 'text-blue-400'
-            } font-semibold`}
-          >
-            {path}{' '}
-          </span>
-        )}
-        {index === len && (
-          <span
-            contentEditable={true}
-            onKeyPress={HandlePressedKey}
-            ref={inputRef}
-            className='text-lg max-w-2/3 outline-none border-none bg-transparent'
-          />
-        )}
-      </div>
-    );
-  };
-
-  const renderMessages = () => {
-    return (
-      <div className='mt-2 ml-1 overflow-scroll scrollbar-hide'>
-        <h4 className='text-blue-400'>Welcome to Web OS</h4>
-        <h4 className=''>Type "help" for all the commands</h4>
-        <div>
-          {messages.map((message: Message, index: number) => {
-            return (
-              <TerminalBody
-                index={index}
-                type={message.type}
-                path={message.message}
-              />
-            );
-          })}
-        </div>
-      </div>
-    );
-  };
-
   return (
     <div
       onClick={() => inputRef.current?.focus()}
@@ -278,7 +198,11 @@ const Terminal: React.FC = () => {
       className='w-2/4 bg-gray-800 shadow-lg rounded-md text-white absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 overflow-scroll scrollbar-hide cursor-text'
     >
       <ActivityWrapper title='Terminal' iconSrc='/images/terminal.svg'>
-        {renderMessages()}
+        <RenderMessages
+          HandlePressedKey={HandlePressedKey}
+          inputRef={inputRef}
+          messages={messages}
+        />
       </ActivityWrapper>
     </div>
   );
