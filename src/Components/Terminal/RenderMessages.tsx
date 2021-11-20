@@ -12,7 +12,7 @@ type Props = {
 
 const RenderMessages = ({ messages, inputRef, HandlePressedKey }: Props) => {
   return (
-    <div className='mt-2 ml-1 overflow-scroll scrollbar-hide'>
+    <div className='mt-2 ml-1  overflow-scroll scrollbar-hide'>
       <h4 className='text-blue-400'>Welcome to Web OS</h4>
       <h4 className=''>Type "help" for all the commands</h4>
       <div>

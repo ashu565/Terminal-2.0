@@ -171,6 +171,7 @@ const Terminal: React.FC = () => {
   };
 
   const HandlePressedKey = (e: any) => {
+    console.log(e.key);
     if (e.key === 'Enter') {
       const terminalInput = e.target.innerText.trim();
       const arr = terminalInput.split(' ');
@@ -194,8 +195,8 @@ const Terminal: React.FC = () => {
   return (
     <div
       onClick={() => inputRef.current?.focus()}
-      style={{ backgroundColor: '#300a24' }}
-      className='md:w-2/4 w-full bg-gray-800 shadow-lg rounded-md text-white absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 overflow-scroll scrollbar-hide cursor-text'
+      // style={{ backgroundColor: '#300a24' }}
+      className='w-full md:w-2/5  shadow-lg rounded-md text-white absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 overflow-scroll scrollbar-hide cursor-text'
     >
       <ActivityWrapper title='Terminal' iconSrc='/images/terminal.svg'>
         <RenderMessages

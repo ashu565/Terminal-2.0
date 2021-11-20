@@ -22,11 +22,20 @@ const App: FC = (props) => {
   }, []);
 
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path='/' element={<Terminal />}></Route>
-      </Routes>
-    </BrowserRouter>
+    <div
+      style={{
+        height: '100vh',
+        width: '100vw',
+        backgroundImage: 'url(/images/6.jpeg)',
+        backgroundSize: 'cover',
+      }}
+    >
+      <BrowserRouter>
+        <Routes>
+          <Route path='/' element={<Terminal />}></Route>
+        </Routes>
+      </BrowserRouter>
+    </div>
   );
 };
 
