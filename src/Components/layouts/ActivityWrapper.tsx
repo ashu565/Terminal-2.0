@@ -10,7 +10,7 @@ interface activity {
 
 const ActivityWrapper: FC<activity> = ({ iconSrc, title, children }) => {
   return (
-    <>
+    <div>
       <div
         style={{ background: '#2a2a2a', cursor: '-webkit-grab' }}
         className='flex justify-between px-2 py-2 w-full'
@@ -32,12 +32,12 @@ const ActivityWrapper: FC<activity> = ({ iconSrc, title, children }) => {
         </div>
       </div>
       <div
-        style={{ height: '34rem', backgroundColor: '#300a24' }}
-        className='overflow-scroll scrollbar-hide '
+        style={{ backgroundColor: '#300a24' }}
+        className='md:h-xr h-yr overflow-scroll scrollbar-hide '
       >
         {children}
       </div>
-    </>
+    </div>
   );
 };
 
