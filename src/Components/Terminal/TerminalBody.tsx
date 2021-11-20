@@ -40,7 +40,7 @@ const TerminalBody = ({
       {type === 'help' && <ShowHelp />}
 
       {type === 'list' && (
-        <span className='text-blue-400 flex flex-wrap items-center text-lg w-1/3'>
+        <span className='text-blue-400 flex flex-wrap items-center text-lg w-2/4'>
           {path?.split(' ').map((data) => {
             return <span className='mr-6'>{data}</span>;
           })}

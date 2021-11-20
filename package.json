@@ -32,7 +32,7 @@
   "scripts": {
     "dev": "craco start -p 8000",
     "start": "craco start",
-    "build": "craco build && CI=false",
+    "build": "CI='' craco build",
     "test": "craco test",
     "eject": "react-scripts eject"
   },
