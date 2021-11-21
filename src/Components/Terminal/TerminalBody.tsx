@@ -31,16 +31,61 @@ const TerminalBody = ({
       show = false;
     }
   }
+  type ShowProps = {
+    path: string;
+  };
+  const ShowPath = ({ path }: ShowProps) => {
+    console.log(show);
+    return (
+      <>
+        {show && (
+          <span
+            className={`bg-blue-500 h-7 pl-4 px-1 relative inline-flex items-center`}
+          >
+            <span className={`text-black inline-block `}>{path}</span>
+            <span
+              style={{
+                clipPath: 'polygon(0 0,100% 50%,100% 50%,0 100%)',
+                top: '0.1px',
+                transform: 'translateX(15.6px)',
+              }}
+              className='h-7 w-4 rounded-r-lg bg-blue-500 absolute top-0 right-0  inline-block'
+            ></span>
+          </span>
+        )}
+        {!show && (
+          <span className={`relative`}>
+            <span className={`inline-block`}>{path}</span>
+          </span>
+        )}
+      </>
+    );
+  };
+
   return (
-    <div key={key}>
-      <span style={{ color: '#7ce335' }} className='text-lg'>
-        {!show ? '' : 'ashutoshsingh@web-os: '}
-      </span>
+    <div
+      style={{ paddingBottom: '2px' }}
+      className='flex items-center'
+      key={key}
+    >
+      {show && (
+        <span className='text-lg text-white px-1 relative bg-black h-7 inline-flex'>
+          <span className={`text-white inline-block `}>ashutoshsingh</span>
+          <span
+            style={{
+              clipPath: 'polygon(0 0,100% 50%,100% 50%,0 100%)',
+              top: '0.1px',
+              transform: 'translateX(15px)',
+            }}
+            className='h-7 w-4 rounded-r-lg bg-black absolute top-0 right-0 transform inline-block z-20'
+          ></span>
+        </span>
+      )}
 
       {type === 'help' && <ShowHelp />}
 
       {type === 'list' && (
-        <span className='text-blue-400 flex flex-wrap items-center text-lg w-2/4'>
+        <span className='text-white flex flex-wrap items-center text-lg w-2/4'>
           {path?.split(' ').map((data) => {
             return <span className='mr-6'>{data}</span>;
           })}
@@ -50,11 +95,9 @@ const TerminalBody = ({
       {type === 'pwd' && <span>{path} </span>}
       {(type === 'error' || type === 'info') && (
         <span
-          className={`${
-            type == 'error' ? 'text-red-500' : 'text-blue-400'
-          } font-semibold`}
+          className={`${type == 'error' ? 'text-red-500' : 'text-blue-400'}`}
         >
-          {path}{' '}
+          <ShowPath path={path} />{' '}
         </span>
       )}
       {index === len && (
@@ -62,7 +105,7 @@ const TerminalBody = ({
           contentEditable={true}
           onKeyPress={HandlePressedKey}
           ref={inputRef}
-          className='text-lg max-w-2/3 outline-none border-none bg-transparent'
+          className='inline-block ml-5 text-lg max-w-2/3 outline-none border-none bg-transparent'
         />
       )}
     </div>

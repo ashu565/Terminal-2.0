@@ -62,7 +62,11 @@ const ActivityWrapper: FC<activity> = ({ iconSrc, title, children }) => {
       <HeaderMac />
       <div
         // style={{ backgroundColor: '#300a24' }}
-        className='md:h-xr h-yr rounded-md bg-gray-900 bg-opacity-40 backdrop-filter backdrop-blur-2xl overflow-scroll scrollbar-hide'
+        // style={{
+        //   backgroundImage: 'url(/images/7.jpeg)',
+        //   backgroundSize: 'cover',
+        // }}
+        className='md:h-xr h-yr rounded-md bg-black overflow-scroll scrollbar-hide'
       >
         {children}
       </div>

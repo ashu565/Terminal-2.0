@@ -196,7 +196,7 @@ const Terminal: React.FC = () => {
     <div
       onClick={() => inputRef.current?.focus()}
       // style={{ backgroundColor: '#300a24' }}
-      className='w-full md:w-2/5  shadow-lg rounded-md text-white absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 overflow-scroll scrollbar-hide cursor-text'
+      className='w-full md:w-3/6  shadow-lg rounded-md text-white absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 overflow-scroll scrollbar-hide cursor-text'
     >
       <ActivityWrapper title='Terminal' iconSrc='/images/terminal.svg'>
         <RenderMessages
